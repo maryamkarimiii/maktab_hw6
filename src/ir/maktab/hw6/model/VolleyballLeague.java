@@ -1,28 +1,9 @@
 package ir.maktab.hw6.model;
 
-public class VolleyballLeague implements League{
-    @Override
-    public void addClub() {
+import ir.maktab.hw6.service.LeagueService;
 
-    }
+import java.util.List;
 
-    @Override
-    public void removeClub() {
+public class VolleyballLeague extends League {
 
-    }
-
-    @Override
-    public void compete() {
-
-    }
-
-    @Override
-    public void calculateScore() {
-
-    }
-
-    @Override
-    public void showCompeteTable() {
-
-    }
 }
