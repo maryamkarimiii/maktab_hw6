@@ -1,14 +1,31 @@
 package ir.maktab.hw6.model;
 
-import java.util.List;
+import ir.maktab.hw6.model.enums.CompetitionResult;
+
 
 public class Club {
     private String clubName;
-    private int gamesPlayed;
+    private int matchPlays;
     private int gamesWon;
     private int gamesLost;
-    private int gamesEquality;
-    private List<Player> players;
+    private int score;
+    private CompetitionResult competitionResult;
+
+    public Club() {
+    }
+
+    public Club(String clubName) {
+        this.clubName = clubName;
+    }
+
+    public Club(String clubName, int gamesPlayed, int gamesWon, int gamesLost, int score) {
+        this.clubName = clubName;
+        this.matchPlays = gamesPlayed;
+        this.gamesWon = gamesWon;
+        this.gamesLost = gamesLost;
+        this.score = score;
+    }
+
 
     static class Player {
         private String name;
@@ -48,7 +65,51 @@ public class Club {
         }
     }
 
+    public String getClubName() {
+        return clubName;
+    }
 
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
+    }
 
+    public int getMatchPlays() {
+        return matchPlays;
+    }
 
+    public void setMatchPlays(int matchPlays) {
+        this.matchPlays = matchPlays;
+    }
+
+    public int getGamesWon() {
+        return gamesWon;
+    }
+
+    public void setGamesWon(int gamesWon) {
+        this.gamesWon = gamesWon;
+    }
+
+    public int getGamesLost() {
+        return gamesLost;
+    }
+
+    public void setGamesLost(int gamesLost) {
+        this.gamesLost = gamesLost;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public CompetitionResult getCompetitionResult() {
+        return competitionResult;
+    }
+
+    public void setCompetitionResult(CompetitionResult competitionResult) {
+        this.competitionResult = competitionResult;
+    }
 }
