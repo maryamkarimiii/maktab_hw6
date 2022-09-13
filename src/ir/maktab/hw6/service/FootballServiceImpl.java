@@ -7,6 +7,7 @@ import ir.maktab.hw6.repository.FootballRepository;
 import ir.maktab.hw6.service.interfaces.LeagueService;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -89,12 +90,12 @@ public class FootballServiceImpl implements LeagueService {
 
 
     private List<Club> sortByScore(List<Club> clubs) {
-        clubs.sort(new Comparator<Club>() {
+        Collections.sort(clubs,Collections.reverseOrder(new Comparator<Club>() {
             @Override
             public int compare(Club o1, Club o2) {
                 return Integer.compare(o1.getScore(),o2.getScore());
             }
-        });
+        }));
         return clubs;
     }
 }
