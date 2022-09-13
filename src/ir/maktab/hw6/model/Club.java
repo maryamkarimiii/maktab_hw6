@@ -2,6 +2,9 @@ package ir.maktab.hw6.model;
 
 import ir.maktab.hw6.model.enums.CompetitionResult;
 
+import java.util.List;
+import java.util.Objects;
+
 
 public class Club {
     private String clubName;
@@ -10,6 +13,7 @@ public class Club {
     private int gamesLost;
     private int score;
     private CompetitionResult competitionResult;
+    private List<Player> players;
 
     public Club() {
     }
@@ -55,6 +59,7 @@ public class Club {
         public void setNatinalCode(String natinalCode) {
             this.natinalCode = natinalCode;
         }
+
         @Override
         public String toString() {
             return "Player{" +
@@ -111,5 +116,36 @@ public class Club {
 
     public void setCompetitionResult(CompetitionResult competitionResult) {
         this.competitionResult = competitionResult;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Club club = (Club) o;
+        return matchPlays == club.matchPlays && gamesWon == club.gamesWon && gamesLost == club.gamesLost && score == club.score && Objects.equals(clubName, club.clubName) && competitionResult == club.competitionResult;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clubName, matchPlays, gamesWon, gamesLost, score, competitionResult);
+    }
+
+    @Override
+    public String toString() {
+        return clubName + ":" +
+                "clubName='" + clubName + '\'' +
+                ", matchPlays=" + matchPlays +
+                ", gamesWon=" + gamesWon +
+                ", gamesLost=" + gamesLost +
+                ", score=" + score;
     }
 }
