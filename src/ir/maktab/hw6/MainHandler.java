@@ -1,26 +1,29 @@
 package ir.maktab.hw6;
 
 import ir.maktab.hw6.model.FootballClub;
-import ir.maktab.hw6.model.League;
 import ir.maktab.hw6.model.VolleyballClub;
 import ir.maktab.hw6.service.FootballServiceImpl;
 import ir.maktab.hw6.service.VolleyballServiceImpl;
 import ir.maktab.hw6.service.interfaces.LeagueService;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Scanner;
 
 public class MainHandler {
     public static Scanner scanner = new Scanner(System.in);
-
-    public static void main(String[] args) throws SQLException {
-        footballMenu();
+    public static void menu() throws SQLException {
+        System.out.println("chose your league \n 1:FOOTBALL \n 2:VOLLEYBALL");
+        switch (Integer.parseInt(scanner.nextLine())){
+            case 1:
+                footballMenu();
+                break;
+            case 2:
+                volleyballMenu();
+        }
     }
 
     public static void footballMenu() throws SQLException {
         FootballServiceImpl footballService = FootballServiceImpl.getInstance();
-        LeagueService volleyballService = VolleyballServiceImpl.getInstance();
         boolean flag = true;
         while (flag) {
             System.out.println("chose \n ~1:add or delete club \n ~2:add competition \n ~3:watch club info \n" +
@@ -40,57 +43,31 @@ public class MainHandler {
                     }
                     break;
                 case 2:
-//                    System.out.println("enter first club in competition");
-//                    FootballClub footballClubA = footballService.findClub(scanner.nextLine());
-//                    if (footballClubA != null) {
-//                        System.out.println("enter the " + footballClubA.getClubName() + "goals");
-//                        footballClubA.setGoal(Integer.parseInt(scanner.nextLine()));
-//                    } else System.out.println("club not exist");
-//                    System.out.println("enter second club in competition");
-//                    FootballClub footballClubB = footballService.findClub(scanner.nextLine());
-//                    if (footballClubB != null) {
-//                        System.out.println("enter the" + footballClubB.getClubName() + "goals");
-//                        footballClubB.setGoal(Integer.parseInt(scanner.nextLine()));
-//                    }
-//                    footballService.competeAndCalculateScore(footballClubA, footballClubB);
-
-                    VolleyballClub volleyballClubA;
+                    FootballClub footballClubA;
                     do {
                         System.out.println("enter first club in competition");
-                        volleyballClubA = ((VolleyballServiceImpl) volleyballService).findClub(scanner.nextLine());
-                        if (volleyballClubA == null)
+                        footballClubA = footballService.findClub(scanner.nextLine());
+                        if (footballClubA == null)
                             System.out.println("club not exist");
-                    } while (volleyballClubA == null);
-                    System.out.println("enter the " + volleyballClubA.getClubName() + "\t" + "win sets");
-                    volleyballClubA.setWinSets(Integer.parseInt(scanner.nextLine()));
-                    System.out.println("enter the " + volleyballClubA.getClubName() + "\t" + "scores in all sets");
-                    volleyballClubA.setSetsScores(Integer.parseInt(scanner.nextLine()));
-                    VolleyballClub volleyballClubB;
+                    } while (footballClubA != null);
+                    System.out.println("enter the " + footballClubA.getClubName() + "goals");
+                    footballClubA.setGoal(Integer.parseInt(scanner.nextLine()));
+                    FootballClub footballClubB;
                     do {
                         System.out.println("enter second club in competition");
-                        volleyballClubB = ((VolleyballServiceImpl) volleyballService).findClub(scanner.nextLine());
-                        if (volleyballClubB == null)
+                        footballClubB = footballService.findClub(scanner.nextLine());
+                        if (footballClubB == null)
                             System.out.println("club not exist");
-                    } while (volleyballClubB == null);
-                    System.out.println("enter the" + volleyballClubB.getClubName() + "\t" + "win sets");
-                    volleyballClubB.setWinSets(Integer.parseInt(scanner.nextLine()));
-                    System.out.println("enter the " + volleyballClubB.getClubName() + "\t" + "scores in all sets");
-                    volleyballClubB.setSetsScores(Integer.parseInt(scanner.nextLine()));
-                    ((VolleyballServiceImpl) volleyballService).updateWinSetsInLeague(volleyballClubA, volleyballClubB);
-                    ((VolleyballServiceImpl) volleyballService).updateSetsScoreInLeague(volleyballClubA, volleyballClubB);
-                    volleyballService.competeAndCalculateScore(volleyballClubA, volleyballClubB);
-
+                    } while (footballClubB != null);
+                    System.out.println("enter the" + footballClubB.getClubName() + "goals");
+                    footballClubB.setGoal(Integer.parseInt(scanner.nextLine()));
+                    footballService.competeAndCalculateScore(footballClubA, footballClubB);
                     break;
                 case 3:
-//                    System.out.println("enter your club name");
-//                    FootballClub footballClub = footballService.findClub(scanner.nextLine());
-//                    if (footballClub != null)
-//                        System.out.println(footballClub);
-//                    System.out.println("the club isn't exist");
                     System.out.println("enter your club name");
-                    VolleyballClub volleyballClub = ((VolleyballServiceImpl) volleyballService).findClub(scanner.nextLine());
-                    if (volleyballClub != null)
-                        System.out.println(volleyballClub);
+                    FootballClub footballClub = footballService.findClub(scanner.nextLine());
+                    if (footballClub != null)
+                        System.out.println(footballClub);
                     System.out.println("the club isn't exist");
                     break;
                 case 4:
@@ -99,9 +76,9 @@ public class MainHandler {
                 case 5:
                     System.out.println("goodbye");
                     flag = false;
-                    break;
             }
         }
+
     }
 
     public static void volleyballMenu() throws SQLException {
@@ -164,7 +141,6 @@ public class MainHandler {
                 case 5:
                     System.out.println("goodbye");
                     flag = false;
-                    break;
             }
         }
     }
