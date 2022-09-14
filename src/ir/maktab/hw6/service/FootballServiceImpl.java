@@ -56,24 +56,18 @@ public class FootballServiceImpl implements LeagueService {
     public void compete(Club clubA, Club clubB) throws SQLException {
         int goalA = ((FootballClub) clubA).getGoal();
         int goalB = ((FootballClub) clubB).getGoal();
-        if (goalA > goalB) {
+        if (goalB > goalA) {
+            Club temp = clubA;
+            clubA = clubB;
+            clubB = temp;
             clubA.setCompetitionResult(CompetitionResult.WIN);
             clubB.setCompetitionResult(CompetitionResult.LOSE);
         }
-        if (goalB > goalA) {
-            clubB.setCompetitionResult(CompetitionResult.WIN);
-            clubA.setCompetitionResult(CompetitionResult.LOSE);
-        }
-        if (goalA == goalB) {
+        else {
             clubA.setCompetitionResult(CompetitionResult.DRAW);
             clubB.setCompetitionResult(CompetitionResult.DRAW);
         }
-        footballRepository.updateRecordAfterCompetition((FootballClub) clubA, (FootballClub) clubB);
-        clubA = findClub(clubA.getClubName());
-        clubB = findClub(clubB.getClubName());
-        clubA.setScore(calculateScore(clubA));
-        clubB.setScore(calculateScore(clubB));
-        footballRepository.updateScore((FootballClub) clubA, (FootballClub) clubB);
+
     }
 
     @Override
@@ -83,17 +77,35 @@ public class FootballServiceImpl implements LeagueService {
         return score;
     }
 
+    public void changeAfterWin(Club club) {
+        club.setGamesWon(club.getGamesWon() + 1);
+        club.setScore(club.getScore() + 3);
+    }
+
+    public void changeAfterLost(Club club) {
+        club.setGamesLost(club.getGamesLost() + 1);
+    }
+
+    public void changeAfterDrawn(Club club) {
+        ((FootballClub) club).setDrawnGame(((FootballClub) club).getDrawnGame() + 1);
+        ((FootballClub) club).setScore(((FootballClub) club).getScore() + 1);
+    }
+
+    public void changeMathPlaysAfterGame(Club club) {
+        club.setMatchPlays(club.getMatchPlays() + 1);
+    }
+
     @Override
-    public List<Club> showCompeteTable() throws SQLException{
-          return sortByScore(footballRepository.showFootballTableInfo());
+    public List<Club> showCompeteTable() throws SQLException {
+        return sortByScore(footballRepository.showFootballTableInfo());
     }
 
 
     private List<Club> sortByScore(List<Club> clubs) {
-        Collections.sort(clubs,Collections.reverseOrder(new Comparator<Club>() {
+        Collections.sort(clubs, Collections.reverseOrder(new Comparator<Club>() {
             @Override
             public int compare(Club o1, Club o2) {
-                return Integer.compare(o1.getScore(),o2.getScore());
+                return Integer.compare(o1.getScore(), o2.getScore());
             }
         }));
         return clubs;

@@ -2,7 +2,6 @@ package ir.maktab.hw6.repository;
 
 import ir.maktab.hw6.model.Club;
 import ir.maktab.hw6.model.FootballClub;
-import ir.maktab.hw6.model.enums.CompetitionResult;
 
 
 import java.sql.*;
@@ -75,39 +74,27 @@ public class FootballRepository {
         preparedStatement.setString(2, clubB.getClubName());
         preparedStatement.addBatch();
         preparedStatement.executeBatch();
-        if (clubA.getCompetitionResult().equals(CompetitionResult.WIN)) {
-            String updateWonGamesQuery = "UPDATE \"footballClub\" set \"wonGames\"=? WHERE \"clubName\"=? ";
-            PreparedStatement preparedStatement3 = connection.prepareStatement(updateWonGamesQuery);
-            preparedStatement3.setInt(1, clubA.getGamesWon() + 1);
-            preparedStatement3.setString(2, clubA.getClubName());
-            preparedStatement3.executeUpdate();
-            String updateLostGamesQuery = "UPDATE \"footballClub\" set \"lostGames\"=? WHERE \"clubName\"=?";
-            PreparedStatement preparedStatement4 = connection.prepareStatement(updateLostGamesQuery);
-            preparedStatement4.setInt(1, clubB.getGamesLost() + 1);
-            preparedStatement4.setString(2, clubB.getClubName());
-            preparedStatement4.executeUpdate();
-        } else if (clubA.getCompetitionResult().equals(CompetitionResult.LOSE)) {
-            String updateWonGamesQuery = "UPDATE \"footballClub\" set \"wonGames\"=? WHERE \"clubName\"=? ";
-            PreparedStatement preparedStatement3 = connection.prepareStatement(updateWonGamesQuery);
-            preparedStatement3.setInt(1, clubB.getGamesWon() + 1);
-            preparedStatement3.setString(2, clubB.getClubName());
-            preparedStatement3.executeUpdate();
-            String updateLostGamesQuery = "UPDATE \"footballClub\" set \"lostGames\"=? WHERE \"clubName\"=?";
-            PreparedStatement preparedStatement4 = connection.prepareStatement(updateLostGamesQuery);
-            preparedStatement4.setInt(1, clubA.getGamesLost() + 1);
-            preparedStatement4.setString(2, clubA.getClubName());
-            preparedStatement4.executeUpdate();
-        } else if (clubA.getCompetitionResult().equals(CompetitionResult.DRAW) && clubB.getCompetitionResult().equals(CompetitionResult.DRAW)) {
-            String updateDrawnGamesQuery = "UPDATE \"footballClub\" set \"drawnGames\"=? WHERE \"clubName\"=?";
-            PreparedStatement preparedStatement5 = connection.prepareStatement(updateDrawnGamesQuery);
-            preparedStatement5.setInt(1, clubA.getDrawnGame() + 1);
-            preparedStatement5.setString(2, clubA.getClubName());
-            preparedStatement5.addBatch();
-            preparedStatement5.setInt(1, clubB.getDrawnGame() + 1);
-            preparedStatement5.setString(2, clubB.getClubName());
-            preparedStatement5.addBatch();
-            preparedStatement5.executeBatch();
-        }
+    }
+
+    public boolean updateWinClub(FootballClub club) throws SQLException {
+        Connection connection = ConnectionGate.getConnection();
+        String updateWonGamesQuery = "UPDATE \"footballClub\" set \"wonGames\"=?,\"score\"=? WHERE \"clubName\"=? ";
+        PreparedStatement preparedStatement = connection.prepareStatement(updateWonGamesQuery);
+        preparedStatement.setInt(1, club.getGamesWon() + 1);
+        preparedStatement.setInt(2, club.getScore() + 3);
+        preparedStatement.setString(2, club.getClubName());
+        int result = preparedStatement.executeUpdate();
+        return result >= 1;
+    }
+
+    public boolean updateLoseClub(FootballClub club) throws SQLException {
+        Connection connection = ConnectionGate.getConnection();
+        String updateWonGamesQuery = "UPDATE \"footballClub\" set \"lostGames\"=? WHERE \"clubName\"=? ";
+        PreparedStatement preparedStatement = connection.prepareStatement(updateWonGamesQuery);
+        preparedStatement.setInt(1, club.getGamesWon() + 1);
+        preparedStatement.setString(2, club.getClubName());
+        int result = preparedStatement.executeUpdate();
+        return result >= 1;
     }
 
     public void updateScore(FootballClub clubA, FootballClub clubB) throws SQLException {
@@ -139,4 +126,5 @@ public class FootballRepository {
         return footballClubs;
     }
 }
+
 
