@@ -11,7 +11,19 @@ public class Main {
     public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws SQLException {
-        FootballRepository footballRepository=FootballRepository.getInstance();
-        System.out.println( Integer.compare(6,4));
+        System.out.println( Integer.compare(3,0));
     }
+    //                    System.out.println("enter first club in competition");
+//                    FootballClub footballClubA = footballService.findClub(scanner.nextLine());
+//                    if (footballClubA != null) {
+//                        System.out.println("enter the " + footballClubA.getClubName() + "goals");
+//                        footballClubA.setGoal(Integer.parseInt(scanner.nextLine()));
+//                    } else System.out.println("club not exist");
+//                    System.out.println("enter second club in competition");
+//                    FootballClub footballClubB = footballService.findClub(scanner.nextLine());
+//                    if (footballClubB != null) {
+//                        System.out.println("enter the" + footballClubB.getClubName() + "goals");
+//                        footballClubB.setGoal(Integer.parseInt(scanner.nextLine()));
+//                    }
+//                    footballService.compete(footballClubA, footballClubB);
 }

@@ -53,7 +53,7 @@ public class FootballServiceImpl implements LeagueService {
     }
 
     @Override
-    public void compete(Club clubA, Club clubB) throws SQLException {
+    public void competeAndCalculateScore(Club clubA, Club clubB) throws SQLException {
         changeMathPlaysAfterGame(clubA, clubB);
         int result = Integer.compare(((FootballClub) clubA).getGoal(), ((FootballClub) clubB).getGoal());
         if (result == 0) {
@@ -70,7 +70,6 @@ public class FootballServiceImpl implements LeagueService {
         footballRepository.updateScore(clubA, clubB);
     }
 
-    @Override
     public int calculateScore(Club club) {
         int score = club.getGamesWon() * 3 + ((FootballClub) club).getDrawnGame() * 1;
         club.setScore(score);

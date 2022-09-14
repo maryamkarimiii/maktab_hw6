@@ -8,8 +8,6 @@ import java.util.List;
 public interface LeagueService {
    String addClub(String clubName) throws SQLException;
    String removeClub(String clubName) throws SQLException;
-   void compete(Club clubA,Club clubB) throws SQLException;
-   int calculateScore(Club club);
-
+   void competeAndCalculateScore(Club clubA,Club clubB) throws SQLException;
   List<Club> showCompeteTable() throws SQLException;
 }

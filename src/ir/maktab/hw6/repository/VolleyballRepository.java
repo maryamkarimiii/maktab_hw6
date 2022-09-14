@@ -1,6 +1,6 @@
 package ir.maktab.hw6.repository;
+
 import ir.maktab.hw6.model.Club;
-import ir.maktab.hw6.model.FootballClub;
 import ir.maktab.hw6.model.VolleyballClub;
 
 import java.sql.*;
@@ -18,6 +18,7 @@ public class VolleyballRepository {
             volleyballRepository = new VolleyballRepository();
         return volleyballRepository;
     }
+
     public boolean isExistClub(String clubName) throws SQLException {
         Connection connection = ConnectionGate.getConnection();
         String selectQuery = "select from \"volleyball_club\" where \"club_name\"=?";
@@ -27,6 +28,7 @@ public class VolleyballRepository {
         connection.close();
         return resultSet.next();
     }
+
     public boolean addClub(String clubName) throws SQLException {
         Connection connection = ConnectionGate.getConnection();
         String insertQuery = "INSERT INTO \"volleyball_club\" (\"club_name\") VALUES (?)";
@@ -36,6 +38,7 @@ public class VolleyballRepository {
         connection.close();
         return result >= 1;
     }
+
     public boolean deleteClub(String clubName) throws SQLException {
         Connection connection = ConnectionGate.getConnection();
         String deleteQuery = "DELETE from \"volleyball_club\" WHERE \"club_name\"=?";
@@ -45,6 +48,7 @@ public class VolleyballRepository {
         connection.close();
         return result >= 1;
     }
+
     public VolleyballClub selectClub(String clubName) throws SQLException {
         Connection connection = ConnectionGate.getConnection();
         String selectQuery = "SELECT * from \"volleyball_club\" WHERE \"club_name\"=?";
@@ -53,22 +57,19 @@ public class VolleyballRepository {
         ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
         VolleyballClub volleyballClub = new VolleyballClub(resultSet.getString("club_name"), resultSet.getInt("match_plays"),
-                resultSet.getInt("won_games"), resultSet.getInt("lost_games"), resultSet.getInt("score"),
-                resultSet.getInt("win_sets"),resultSet.getInt("sets_scores"));
+                resultSet.getInt("won_games"), resultSet.getInt("lost_game"), resultSet.getInt("score"),
+                resultSet.getInt("win_sets"), resultSet.getInt("sets_scores"));
         connection.close();
         return volleyballClub;
     }
-    public void updateMatchPlays(Club clubA, Club clubB) throws SQLException {
+
+    public void updateMatchPlays(Club club) throws SQLException {
         Connection connection = ConnectionGate.getConnection();
         String updateGamesPlayQuery = "UPDATE \"volleyball_club\" set \"match_plays\"=? WHERE \"club_name\"=?";
         PreparedStatement preparedStatement = connection.prepareStatement(updateGamesPlayQuery);
-        preparedStatement.setInt(1, clubA.getMatchPlays());
-        preparedStatement.setString(2, clubA.getClubName());
-        preparedStatement.addBatch();
-        preparedStatement.setInt(1, clubB.getMatchPlays());
-        preparedStatement.setString(2, clubB.getClubName());
-        preparedStatement.addBatch();
-        preparedStatement.executeBatch();
+        preparedStatement.setInt(1, club.getMatchPlays());
+        preparedStatement.setString(2, club.getClubName());
+        preparedStatement.executeUpdate();
         connection.close();
     }
 
@@ -83,19 +84,21 @@ public class VolleyballRepository {
         connection.close();
         return result >= 1;
     }
+
     public boolean updateLoseClub(Club club) throws SQLException {
         Connection connection = ConnectionGate.getConnection();
-        String updateWonGamesQuery = "UPDATE \"volleyball_club\" set \"lost_games\"=? WHERE \"club_name\"=? ";
+        String updateWonGamesQuery = "UPDATE \"volleyball_club\" set \"lost_game\"=? WHERE \"club_name\"=? ";
         PreparedStatement preparedStatement = connection.prepareStatement(updateWonGamesQuery);
-        preparedStatement.setInt(1, club.getGamesWon());
+        preparedStatement.setInt(1, club.getGamesLost());
         preparedStatement.setString(2, club.getClubName());
         int result = preparedStatement.executeUpdate();
         connection.close();
         return result >= 1;
     }
+
     public void updateScore(Club clubA, Club clubB) throws SQLException {
         Connection connection = ConnectionGate.getConnection();
-        String updateScoreQuery = "UPDATE \"footballClub\" set \"score\"=? WHERE \"clubName\"=?";
+        String updateScoreQuery = "UPDATE \"volleyball_club\" set \"score\"=? WHERE \"club_name\"=?";
         PreparedStatement preparedStatement = connection.prepareStatement(updateScoreQuery);
         preparedStatement.setInt(1, clubA.getScore());
         preparedStatement.setString(2, clubA.getClubName());
@@ -106,16 +109,48 @@ public class VolleyballRepository {
         preparedStatement.executeBatch();
         connection.close();
     }
-    public List<Club> showFootballTableInfo() throws SQLException {
+
+    public void updateWinSetsInLeague(String clubName, int winSetsInCompetition) throws SQLException {
+        Connection connection = ConnectionGate.getConnection();
+        String selectQuery = "SELECT \"win_sets\" from \"volleyball_club\" WHERE \"club_name\"=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+        preparedStatement.setString(1, clubName);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        int result = resultSet.getInt("win_sets");
+        String updateQuery = "UPDATE \"volleyball_club\" set \"win_sets\"=? WHERE \"club_name\"=?";
+        PreparedStatement preparedStatement1 = connection.prepareStatement(updateQuery);
+        preparedStatement1.setInt(1, result + winSetsInCompetition);
+        preparedStatement1.setString(2, clubName);
+        preparedStatement1.executeUpdate();
+        connection.close();
+    }
+
+    public void updateSetsScoreInLeague(String clubName, int scoreInCompetition) throws SQLException {
+        Connection connection = ConnectionGate.getConnection();
+        String selectQuery = "SELECT \"sets_scores\" from \"volleyball_club\" WHERE \"club_name\"=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+        preparedStatement.setString(1, clubName);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        int result = resultSet.getInt("sets_scores");
+        String updateQuery = "UPDATE \"volleyball_club\" set \"sets_scores\"=? WHERE \"club_name\"=?";
+        PreparedStatement preparedStatement1 = connection.prepareStatement(updateQuery);
+        preparedStatement1.setInt(1, result + scoreInCompetition);
+        preparedStatement1.setString(2, clubName);
+        preparedStatement1.executeUpdate();
+        connection.close();
+    }
+
+    public List<VolleyballClub> showFootballTableInfo() throws SQLException {
         Connection connection = ConnectionGate.getConnection();
         String selectQuery = "SELECT \"club_name\",\"match_plays\",\"won_games\",\"lost_games\",\"score\", from \"volleyball_club\"";
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(selectQuery);
-        List<Club> volleyballClubs = new ArrayList<>();
+        List<VolleyballClub> volleyballClubs = new ArrayList<>();
         while (resultSet.next()) {
             VolleyballClub volleyballClub = new VolleyballClub(resultSet.getString("club_name"), resultSet.getInt("match_plays"),
-                    resultSet.getInt("won_games"), resultSet.getInt("lost_games"), resultSet.getInt("score"),
-                    resultSet.getInt("win_sets"),resultSet.getInt("sets_scores"));
+                    resultSet.getInt("won_games"), resultSet.getInt("lost_games"), resultSet.getInt("score"));
             volleyballClubs.add(volleyballClub);
         }
         connection.close();

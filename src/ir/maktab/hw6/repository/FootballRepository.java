@@ -94,7 +94,7 @@ public class FootballRepository {
         Connection connection = ConnectionGate.getConnection();
         String updateWonGamesQuery = "UPDATE \"footballClub\" set \"lostGames\"=? WHERE \"clubName\"=? ";
         PreparedStatement preparedStatement = connection.prepareStatement(updateWonGamesQuery);
-        preparedStatement.setInt(1, club.getGamesWon());
+        preparedStatement.setInt(1, club.getGamesLost());
         preparedStatement.setString(2, club.getClubName());
         int result = preparedStatement.executeUpdate();
         connection.close();
