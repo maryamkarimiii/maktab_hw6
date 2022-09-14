@@ -93,21 +93,24 @@ public class VolleyballServiceImpl implements LeagueService {
         volleyballRepository.updateMatchPlays(club);
         volleyballRepository.updateLoseClub(club);
     }
-    public void updateWinSetsInLeague(Club clubA,Club clubB) throws SQLException {
-        volleyballRepository.updateWinSetsInLeague(clubA.getClubName(),((VolleyballClub)clubA).getWinSets());
-        volleyballRepository.updateWinSetsInLeague(clubB.getClubName(),((VolleyballClub)clubB).getWinSets());
+
+    public void updateWinSetsInLeague(Club clubA, Club clubB) throws SQLException {
+        volleyballRepository.updateWinSetsInLeague(clubA.getClubName(), ((VolleyballClub) clubA).getWinSets());
+        volleyballRepository.updateWinSetsInLeague(clubB.getClubName(), ((VolleyballClub) clubB).getWinSets());
     }
-    public void updateSetsScoreInLeague (Club clubA,Club clubB) throws SQLException {
-        volleyballRepository.updateSetsScoreInLeague(clubA.getClubName(),((VolleyballClub)clubA).getSetsScores());
-        volleyballRepository.updateSetsScoreInLeague(clubB.getClubName(),((VolleyballClub)clubB).getSetsScores());
+
+    public void updateSetsScoreInLeague(Club clubA, Club clubB) throws SQLException {
+        volleyballRepository.updateSetsScoreInLeague(clubA.getClubName(), ((VolleyballClub) clubA).getSetsScores());
+        volleyballRepository.updateSetsScoreInLeague(clubB.getClubName(), ((VolleyballClub) clubB).getSetsScores());
     }
 
 
     @Override
     public List<Club> showCompeteTable() throws SQLException {
-       return sortByScoreAndWinsSetsAndAllScores(volleyballRepository.showFootballTableInfo());
+        return sortByScoreAndWinsSetsAndAllScores(volleyballRepository.showFootballTableInfo());
     }
-    private List<Club> sortByScoreAndWinsSetsAndAllScores(List<Club> clubs) {
+
+    private List<Club> sortByScoreAndWinsSetsAndAllScores(List<VolleyballClub> clubs) {
         Collections.sort(clubs, Collections.reverseOrder(Comparator.comparing(VolleyballClub::getScore)
                 .thenComparing(VolleyballClub::getWinSets)
                 .thenComparing(VolleyballClub::getSetsScores)));
