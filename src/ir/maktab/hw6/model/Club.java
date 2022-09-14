@@ -34,7 +34,7 @@ public class Club {
     static class Player {
         private String name;
         private String family;
-        private String natinalCode;
+        private String nationalCode;
 
         public String getName() {
             return name;
@@ -52,12 +52,12 @@ public class Club {
             this.family = family;
         }
 
-        public String getNatinalCode() {
-            return natinalCode;
+        public String getNationalCode() {
+            return nationalCode;
         }
 
-        public void setNatinalCode(String natinalCode) {
-            this.natinalCode = natinalCode;
+        public void setNationalCode(String nationalCode) {
+            this.nationalCode = nationalCode;
         }
 
         @Override
@@ -65,7 +65,7 @@ public class Club {
             return "Player{" +
                     "name='" + name + '\'' +
                     ", family='" + family + '\'' +
-                    ", natinalCode='" + natinalCode + '\'' +
+                    ", nationalCode='" + nationalCode + '\'' +
                     '}';
         }
     }

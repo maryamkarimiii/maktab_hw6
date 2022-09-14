@@ -54,20 +54,20 @@ public class FootballServiceImpl implements LeagueService {
 
     @Override
     public void compete(Club clubA, Club clubB) throws SQLException {
-        int goalA = ((FootballClub) clubA).getGoal();
-        int goalB = ((FootballClub) clubB).getGoal();
-        if (goalB > goalA) {
-            Club temp = clubA;
-            clubA = clubB;
-            clubB = temp;
-            clubA.setCompetitionResult(CompetitionResult.WIN);
-            clubB.setCompetitionResult(CompetitionResult.LOSE);
+        changeMathPlaysAfterGame(clubA, clubB);
+        int result = Integer.compare(((FootballClub) clubA).getGoal(), ((FootballClub) clubB).getGoal());
+        if (result == 0) {
+            changeAfterDrawn(clubA);
+            changeAfterDrawn(clubB);
+            footballRepository.updateDrawnClubs(((FootballClub) clubA), ((FootballClub) clubB));
+        } else if (result > 0) {
+            changeAfterWin(clubA);
+            changeAfterLost(clubB);
+        } else {
+            changeAfterWin(clubB);
+            changeAfterLost(clubA);
         }
-        else {
-            clubA.setCompetitionResult(CompetitionResult.DRAW);
-            clubB.setCompetitionResult(CompetitionResult.DRAW);
-        }
-
+        footballRepository.updateScore(clubA, clubB);
     }
 
     @Override
@@ -77,22 +77,29 @@ public class FootballServiceImpl implements LeagueService {
         return score;
     }
 
-    public void changeAfterWin(Club club) {
+    public void changeAfterWin(Club club) throws SQLException {
+        club.setCompetitionResult(CompetitionResult.WIN);
         club.setGamesWon(club.getGamesWon() + 1);
         club.setScore(club.getScore() + 3);
+        footballRepository.updateWinClub(club);
     }
 
-    public void changeAfterLost(Club club) {
+    public void changeAfterLost(Club club) throws SQLException {
+        club.setCompetitionResult(CompetitionResult.LOSE);
         club.setGamesLost(club.getGamesLost() + 1);
+        footballRepository.updateLoseClub(club);
     }
 
     public void changeAfterDrawn(Club club) {
+        club.setCompetitionResult(CompetitionResult.DRAW);
         ((FootballClub) club).setDrawnGame(((FootballClub) club).getDrawnGame() + 1);
-        ((FootballClub) club).setScore(((FootballClub) club).getScore() + 1);
+        club.setScore(club.getScore() + 1);
     }
 
-    public void changeMathPlaysAfterGame(Club club) {
-        club.setMatchPlays(club.getMatchPlays() + 1);
+    public void changeMathPlaysAfterGame(Club clubA, Club clubB) throws SQLException {
+        clubA.setMatchPlays(clubA.getMatchPlays() + 1);
+        clubB.setMatchPlays(clubB.getMatchPlays() + 1);
+        footballRepository.updateMatchPlays(clubA, clubB);
     }
 
     @Override
